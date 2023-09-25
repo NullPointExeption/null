@@ -1,0 +1,47 @@
+public class GuiEventHandler {
+
+
+
+    Minecraft mc = Minecraft.getInstance();
+    @SubscribeEvent
+    public void packet(PacketEvent.Incoming event ){
+        try {
+            if (event.getPacket() instanceof CPlayerPacket.RotationPacket) {
+                sendMesag("Выполнилось");
+                event.setPacket(new CPlayerPacket.RotationPacket(calculateRotations(target)[0], calculateRotations(target)[1], mc.player.isOnGround()));
+
+            }
+        }catch (Exception e){
+
+        }
+    }
+    @SubscribeEvent
+    public void packets(PacketEvent.Outgoing event ){
+        try {
+            if (event.getPacket() instanceof CPlayerPacket.RotationPacket) {
+                sendMesag("Выполнилось");
+                event.setPacket(new CPlayerPacket.RotationPacket(calculateRotations(target)[0], calculateRotations(target)[1], mc.player.isOnGround()));
+
+            }
+        }catch (Exception e){
+
+        }
+    }
+
+    @SubscribeEvent
+    public void onTick(TickEvent.RenderTickEvent event) {
+
+
+        target = mc.world.getPlayers().stream().filter(entityPlayer -> entityPlayer != mc.player)
+                .min(Comparator.comparing(entityPlayer -> entityPlayer.getDistance(mc.player)))
+                .filter(entityPlayer -> entityPlayer.getDistance(mc.player) <= радиус)
+                .filter(entityplayer -> !ClientCommandRegistry.Memory.друзья.stream().anyMatch(name -> name.equalsIgnoreCase(entityplayer.getName().getString())))
+                .orElse(null);
+        mc.player.rotationYaw += 0.001;
+        mc.player.rotationPitch += 0.001;
+        mc.player.renderYawOffset += 0.001;
+        mc.player.rotationYawHead += 0.001;
+
+    }
+}
+
