@@ -1,0 +1,39 @@
+@SubscribeEvent
+    public void packet(PacketEvent.Outgoing event ) {
+        try {
+            if (event.getPacket() instanceof CPlayerPacket.RotationPacket && target != null) {
+                sendMesag("Выполнилось");
+                Class<?> cPlayerPacketClass = CPlayerPacket.class;
+                // Получите поля yaw и pitch
+                Field yawField = cPlayerPacketClass.getDeclaredField("yaw");
+                Field pitchField = cPlayerPacketClass.getDeclaredField("pitch");
+
+                // Установите доступ к полям (публичный доступ)
+                yawField.setAccessible(true);
+                pitchField.setAccessible(true);
+
+                // Установите новые значения для yaw и pitch
+                float newYawValue = calculateRotations(target)[0];  // Новое значение yaw
+                float newPitchValue = calculateRotations(target)[1]; // Новое значение pitch
+                yawField.set(event.getPacket(), newYawValue);
+                pitchField.set(event.getPacket(), newPitchValue);
+            } else if (event.getPacket() instanceof CPlayerPacket.PositionRotationPacket && target != null) {
+                Class<?> cPlayerPacketClass = CPlayerPacket.class;
+                // Получите поля yaw и pitch
+                Field yawField = cPlayerPacketClass.getDeclaredField("yaw");
+                Field pitchField = cPlayerPacketClass.getDeclaredField("pitch");
+
+                // Установите доступ к полям (публичный доступ)
+                yawField.setAccessible(true);
+                pitchField.setAccessible(true);
+
+                // Установите новые значения для yaw и pitch
+                float newYawValue = calculateRotations(target)[0];  // Новое значение yaw
+                float newPitchValue = calculateRotations(target)[1]; // Новое значение pitch
+                yawField.set(event.getPacket(), newYawValue);
+                pitchField.set(event.getPacket(), newPitchValue);
+            }
+        } catch (Exception e) {
+
+        }
+    }
